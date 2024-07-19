@@ -14,6 +14,17 @@ contract DegenToken is ERC20, ERC20Burnable, Ownable {
         _mint(recipient, quantity);
     }
 
+    // Function to burn tokens
+    function burn(uint256 quantity) public override {
+        super.burn(quantity);
+    }
+
+    // Function to transfer tokens
+    function transfer(address recipient, uint256 amount) public override returns (bool) {
+        _transfer(_msgSender(), recipient, amount);
+        return true;
+    }
+
     // Custom event to log NFT-based transactions
     event NFTTransfer(address indexed sender, address indexed recipient, uint256 indexed tokenId, string tokenName);
 
@@ -35,8 +46,6 @@ contract DegenToken is ERC20, ERC20Burnable, Ownable {
         NFT memory newNFT = NFT(nftCounter, _tokenName, _tokenPrice, msg.sender);
         nftRegistry[nftCounter] = newNFT;
     }
-
-    // Function to redeem tokens for an NFT
     function redeemNFT(uint256 _tokenId) external {
         require(_tokenId > 0 && _tokenId <= nftCounter, "Invalid token ID");
         NFT memory selectedNFT = nftRegistry[_tokenId];
@@ -48,8 +57,6 @@ contract DegenToken is ERC20, ERC20Burnable, Ownable {
 
         emit NFTTransfer(msg.sender, owner(), _tokenId, selectedNFT.tokenName); // Log the NFT transfer
     }
-
-    // Function to get details of an NFT
     function getNFTDetails(uint256 _tokenId) external view returns (NFT memory) {
         require(_tokenId > 0 && _tokenId <= nftCounter, "Token ID does not exist");
         return nftRegistry[_tokenId];
