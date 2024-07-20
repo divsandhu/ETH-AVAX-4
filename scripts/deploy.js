@@ -1,11 +1,17 @@
+const hre = require("hardhat");
+
 async function main() {
-  const NFTCollection = await ethers.getContractFactory("NFTCollection");
-  const nftCollection = await NFTCollection.deploy("Your prompt description here");
-  await nftCollection.deployed();
-  console.log("NFTCollection deployed to:", nftCollection.address);
+    const DegenToken = await hre.ethers.getContractFactory("DegenToken");
+    const degenToken = await DegenToken.deploy();
+
+    await degenToken.deployed();
+
+    console.log("DegenToken deployed to:", degenToken.address);
 }
 
-main().catch((error) => {
-  console.error(error);
-  process.exitCode = 1;
-});
+main()
+    .then(() => process.exit(0))
+    .catch((error) => {
+        console.error(error);
+        process.exit(1);
+    });
